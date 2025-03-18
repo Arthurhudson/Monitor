@@ -1,55 +1,55 @@
-# 系统资源监控工具
+# System Resource Monitoring Tool
 
-这是一个用 Python 编写的系统资源监控工具，可以监控 CPU、内存、磁盘使用率等系统指标，并在超过阈值时发送告警邮件。
+A Python-based system resource monitoring tool that tracks CPU, memory, disk usage, and other system metrics, sending alert emails when thresholds are exceeded.
 
-## 功能特点
+## Features
 
-- 监控系统关键指标：
-  - CPU 使用率、核心数、频率和系统负载
-  - 内存使用率和交换分区状态
-  - 磁盘使用率和可用空间
-  - 网络流量统计（发送/接收字节数、错误数、丢包数）
-- 监控关键进程运行状态
-- 支持多级别告警（警告和严重）
-- 告警频率控制，避免告警轰炸
-- 监控数据 JSON 格式持久化存储
-- 日志自动轮转（最大 10MB，保留 5 个备份）
-- 优雅退出并保存数据
-- 类型注解支持
+- Monitor key system metrics:
+  - CPU usage, core count, frequency, and system load
+  - Memory usage and swap status
+  - Disk usage and available space
+  - Network traffic statistics (bytes sent/received, errors, packet loss)
+- Monitor critical process status
+- Support for multiple alert levels (warning and critical)
+- Alert frequency control to avoid alert flooding
+- JSON format persistence for monitoring data
+- Automatic log rotation (max 10MB, keeps 5 backups)
+- Graceful exit with data saving
+- Type annotation support
 
-## 安装要求
+## Requirements
 
 - Python 3.6+
 - psutil >= 5.9.0
 - typing-extensions >= 4.5.0
 
-## 安装步骤
+## Installation
 
-1. 克隆代码库：
+1. Clone the repository:
 ```bash
 git clone https://github.com/Arthurhudson/Monitor.git
 cd Monitor
 ```
 
-2. 安装依赖：
+2. Install dependencies:
 ```bash
 pip3 install -r requirements.txt
 ```
 
-3. 配置监控参数：
-   - 复制配置模板：`cp config/config.py.template config/config.py`
-   - 修改 `config.py` 中的配置参数
+3. Configure monitoring parameters:
+   - Copy configuration template: `cp config/config.py.template config/config.py`
+   - Modify parameters in `config.py`
 
-## 配置说明
+## Configuration
 
-配置文件位于 `config/config.py`，主要配置项包括：
+The configuration file is located at `config/config.py`. Main configuration items include:
 
 ```python
 MONITOR_CONFIG = {
-    'interval': 300,  # 监控间隔（秒）
-    'log_file': '../logs/monitor.log',  # 日志文件路径
+    'interval': 300,  # Monitoring interval (seconds)
+    'log_file': '../logs/monitor.log',  # Log file path
 
-    # 资源使用阈值（百分比）
+    # Resource usage thresholds (percentage)
     'thresholds': {
         'cpu': 80,
         'memory': 80,
@@ -60,23 +60,23 @@ MONITOR_CONFIG = {
         }
     },
 
-    # 需要监控的关键进程
+    # Critical processes to monitor
     'critical_processes': [
         'nginx',
         'mysql',
         'redis-server'
     ],
 
-    # 告警配置
+    # Alert configuration
     'alert': {
-        'interval': 3600,  # 相同告警的最小间隔（秒）
+        'interval': 3600,  # Minimum interval between same alerts (seconds)
         'levels': {
-            'warning': 80,  # 警告阈值
-            'critical': 90  # 严重阈值
+            'warning': 80,  # Warning threshold
+            'critical': 90  # Critical threshold
         }
     },
 
-    # 邮件配置
+    # Email configuration
     'email': {
         'sender': 'your-email@example.com',
         'receiver': 'admin@example.com',
@@ -88,58 +88,58 @@ MONITOR_CONFIG = {
 }
 ```
 
-## 运行方法
+## Running
 
-1. 直接运行：
+1. Direct execution:
 ```bash
 python3 src/monitor.py
 ```
 
-2. 后台运行：
+2. Background execution:
 ```bash
 nohup python3 src/monitor.py > /dev/null 2>&1 &
 ```
 
-## 日志和数据文件
+## Logs and Data Files
 
-- 监控日志：`logs/monitor.log`
-  - 自动轮转，单个文件最大 10MB
-  - 保留最近 5 个备份文件
-- 监控数据：`logs/metrics_YYYYMMDD.json`
-  - 每天生成新文件
-  - JSON 格式存储
-  - 保存最近 1000 条记录
+- Monitor logs: `logs/monitor.log`
+  - Automatic rotation, maximum 10MB per file
+  - Keeps 5 most recent backup files
+- Monitor data: `logs/metrics_YYYYMMDD.json`
+  - New file generated daily
+  - JSON format storage
+  - Stores last 1000 records
 
-## 告警说明
+## Alert System
 
-系统支持两个告警级别：
-- 警告（Warning）：资源使用率超过配置的警告阈值（默认 80%）
-- 严重（Critical）：资源使用率超过配置的严重阈值（默认 90%）
+The system supports two alert levels:
+- Warning: Resource usage exceeds warning threshold (default 80%)
+- Critical: Resource usage exceeds critical threshold (default 90%)
 
-告警信息包含：
-- 告警级别和时间戳
-- CPU 信息（使用率、核心数、频率、系统负载）
-- 内存信息（总量、可用量、使用率、交换分区状态）
-- 磁盘信息（总量、已用、可用、使用率）
-- 网络状态（发送/接收流量、错误数、丢包数）
-- 关键进程运行状态
+Alert information includes:
+- Alert level and timestamp
+- CPU information (usage, core count, frequency, system load)
+- Memory information (total, available, usage, swap status)
+- Disk information (total, used, available, usage)
+- Network status (send/receive traffic, errors, packet loss)
+- Critical process status
 
-## 注意事项
+## Important Notes
 
-1. 确保配置文件中的邮件服务器信息正确
-2. 建议将监控间隔设置在 5 分钟以上
-3. 需要适当的系统权限来获取进程信息
-4. 确保日志目录具有写入权限
-5. 配置文件必须包含所有必需字段
+1. Ensure email server information is correct in the configuration
+2. Recommended monitoring interval is 5 minutes or more
+3. Appropriate system permissions required for process information
+4. Ensure write permissions for log directory
+5. Configuration file must include all required fields
 
-## 贡献指南
+## Contributing
 
-欢迎提交 Issue 和 Pull Request 来改进这个工具。在提交代码时请：
+Issues and Pull Requests are welcome to improve this tool. When submitting code:
 
-1. 确保代码包含适当的类型注解
-2. 通过所有测试用例
-3. 更新相关文档
+1. Ensure code includes appropriate type annotations
+2. Pass all test cases
+3. Update relevant documentation
 
-## 许可证
+## License
 
 MIT License
