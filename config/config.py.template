@@ -1,0 +1,49 @@
+"""
+系统监控配置文件模板
+请复制此文件为 config.py 并修改相关配置
+"""
+
+MONITOR_CONFIG = {
+    # 监控间隔（秒）
+    'interval': 300,  # 5分钟
+
+    # 日志文件路径
+    'log_file': '../logs/monitor.log',
+
+    # 资源使用阈值（百分比）
+    'thresholds': {
+        'cpu': 80,
+        'memory': 80,
+        'disk': 85,
+        'network': {
+            'bytes_sent': 1000000,  # 1MB/s
+            'bytes_recv': 1000000   # 1MB/s
+        }
+    },
+
+    # 关键进程列表
+    'critical_processes': [
+        'nginx',
+        'mysql',
+        'redis-server'
+    ],
+
+    # 告警配置
+    'alert': {
+        'interval': 3600,  # 相同告警的最小间隔（秒）
+        'levels': {
+            'warning': 80,  # 警告阈值
+            'critical': 90  # 严重阈值
+        }
+    },
+
+    # 邮件配置
+    'email': {
+        'sender': 'your-email@example.com',
+        'receiver': 'admin@example.com',
+        'smtp_server': 'smtp.example.com',
+        'smtp_port': 587,
+        'username': 'your-username',
+        'password': 'your-password'
+    }
+}
